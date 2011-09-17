@@ -28,6 +28,7 @@ try:
 	import webbrowser
 	import sys
 	import ConfigParser
+	import textwrap
 except (ImportError) :
 	print "You are missing some default python packages..."
 	print "Called packages: os, webbrowser, sys, ConfigParser"
@@ -39,11 +40,16 @@ except (ImportError) :
 	print "python2.7 is currently required..."
 	exit()
 
+
+
+
 # Parse command line arguments using argparse. Descriptions added here will be displayed using -h
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--count', action='store', dest='number',
                     help='Number of tweets/results to return.', type=int, default=30)
+parser.add_argument('-w', '--width', action='store', dest='width',
+                    help='Width of tweets column', type=int, default=200)
 parser.add_argument('-a','--auth', '--oauth', action='store_true', default=False,
                     dest='oauth',
                     help='Creates configuration file with Authentication tokens.')
@@ -76,7 +82,7 @@ parser.add_argument('-rtm','--retweetstome', action='store_true', default=False,
 parser.add_argument('-n','--newline', action='store_true', default=False,
                     dest='newline',
                     help='Display\'s tweets your latest timeline.')
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.01')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.02')
 parser.add_argument('-e','--example', action='store_true', default=False,
                     dest='example',
                     help='Display\'s an example GeekTool script path.')
@@ -85,6 +91,7 @@ parser.add_argument('-e','--example', action='store_true', default=False,
 
 results = parser.parse_args()
 totalresults = results.number
+columnwidth =  results.width
 
 # Declare OAuth varibles.
 # if you do not want to use a config file you can manually add your OAuth detail here.
@@ -294,25 +301,57 @@ def determine_max_username(padding,type,sorting):
 	#
 	# I'm going to look a new/better way of printing line spacing if required. :/
 
+	
 	for result in type:
 		if sorting == "timeline":
-			print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad) + result.text.encode("utf-8")
+			unicoded = result.text.encode("utf-8")
+			space = ""
+			count = 0
+			while (count < pad):
+				space = space + ' '
+				count = count + 1
+			print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
 			if results.newline == True:
 				print 
 		if sorting == "retweet":
-			print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad) + result.text.encode("utf-8")
+			unicoded = result.text.encode("utf-8")
+			space = ""
+			count = 0
+			while (count < pad):
+				space = space + ' '
+				count = count + 1
+			
+			print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
 			if results.newline == True:
 				print
 		if sorting == "search":
-			print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad) + result.text.encode("utf-8")
+			unicoded = result.text.encode("utf-8")
+			space = ""
+			count = 0
+			while (count < pad):
+				space = space + ' '
+				count = count + 1
+			print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
 			if results.newline == True:
 				print
 		if sorting == 'direct':
-			print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + result.text.encode("utf-8")
+			unicoded = result.text.encode("utf-8")
+			space = ""
+			count = 0
+			while (count < pad):
+				space = space + ' '
+				count = count + 1
+			print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
 			if results.newline == True:
 				print
 		if sorting == "directsent":
-			print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + "@" + result.recipient_screen_name + " " + result.text.encode("utf-8")
+			unicoded = result.text.encode("utf-8")
+			space = ""
+			count = 0
+			while (count < pad):
+				space = space + ' '
+				count = count + 1
+			print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + "@" + result.recipient_screen_name + " " + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
 			if results.newline == True:
 				print
 
