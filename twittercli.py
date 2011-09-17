@@ -305,53 +305,47 @@ def determine_max_username(padding,type,sorting):
 	for result in type:
 		if sorting == "timeline":
 			unicoded = result.text.encode("utf-8")
-			space = ""
-			count = 0
-			while (count < pad):
-				space = space + ' '
-				count = count + 1
-			print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
+			if columnwidth < 200:
+				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad)
+				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+			else:
+				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad) + unicoded
 			if results.newline == True:
-				print 
+				print unicoded
 		if sorting == "retweet":
 			unicoded = result.text.encode("utf-8")
-			space = ""
-			count = 0
-			while (count < pad):
-				space = space + ' '
-				count = count + 1
-			
-			print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
+			if columnwidth < 200:
+				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad)
+				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+			else:
+				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad) + unicoded
 			if results.newline == True:
 				print
 		if sorting == "search":
 			unicoded = result.text.encode("utf-8")
-			space = ""
-			count = 0
-			while (count < pad):
-				space = space + ' '
-				count = count + 1
-			print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
+			if columnwidth < 200:
+				print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad)
+				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+			else:
+				print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad) + unicoded
 			if results.newline == True:
 				print
 		if sorting == 'direct':
 			unicoded = result.text.encode("utf-8")
-			space = ""
-			count = 0
-			while (count < pad):
-				space = space + ' '
-				count = count + 1
-			print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
+			if columnwidth < 200:
+				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad)
+				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+			else:
+				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad)  + unicoded
 			if results.newline == True:
 				print
 		if sorting == "directsent":
 			unicoded = result.text.encode("utf-8")
-			space = ""
-			count = 0
-			while (count < pad):
-				space = space + ' '
-				count = count + 1
-			print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + "@" + result.recipient_screen_name + " " + textwrap.fill(unicoded,initial_indent='',subsequent_indent=space, width=columnwidth)
+			if columnwidth < 200:
+				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad)
+				print textwrap.fill("@" + result.recipient_screen_name + " " + unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+			else:
+				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + "@" + result.recipient_screen_name + " "  + unicoded
 			if results.newline == True:
 				print
 
