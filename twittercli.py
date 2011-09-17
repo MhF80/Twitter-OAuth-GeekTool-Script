@@ -8,7 +8,7 @@ http://parezcoydigo.wordpress.com/2011/04/23/twitter-from-the-command-line/
 Authentication:
 http://talkfast.org/2010/05/31/twitter-from-the-command-line-in-python-using-oauth
 
-argparse:
+Argparse Code:
 http://www.doughellmann.com/PyMOTW/argparse/
 
 --Modified for GeekTool by Graeme Noble 2011-09-03
