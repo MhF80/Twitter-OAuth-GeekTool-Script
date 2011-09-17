@@ -16,13 +16,28 @@ Argparse Code:
 """
 
 # Import modules, tweepy should be the only package not preinstalled on system. 
-
-import tweepy
-import os
-import webbrowser
-import sys
-import ConfigParser
-import argparse
+try:
+	import tweepy
+except (ImportError) :
+	print "Error importing the Tweepy package..."
+	print "Have you installed it using 'sudo easy_install tweepy'?"
+	print "Or maybe you are not running the correct version of python."
+	exit()
+try:
+	import os
+	import webbrowser
+	import sys
+	import ConfigParser
+except (ImportError) :
+	print "You are missing some default python packages..."
+	print "Called packages: os, webbrowser, sys, ConfigParser"
+	exit()
+try:
+	import argparse
+except (ImportError) :
+	print "Error importing the ArgParse package..."
+	print "python2.7 is currently required..."
+	exit()
 
 # Parse command line arguments using argparse. Descriptions added here will be displayed using -h
 
@@ -61,7 +76,7 @@ parser.add_argument('-rtm','--retweetstome', action='store_true', default=False,
 parser.add_argument('-n','--newline', action='store_true', default=False,
                     dest='newline',
                     help='Display\'s tweets your latest timeline.')
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.0')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.01')
 parser.add_argument('-e','--example', action='store_true', default=False,
                     dest='example',
                     help='Display\'s an example GeekTool script path.')
