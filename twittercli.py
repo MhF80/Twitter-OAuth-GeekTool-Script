@@ -15,13 +15,12 @@ Argparse Code:
 --Modified for GeekTool by Graeme Noble 2011-09-03
 """
 
-# Import modules, tweepy should be the only package not preinstalled on system. 
+# Import modules, tweepy should be the only package not preinstalled on system.
+
 try:
 	import tweepy
 except (ImportError) :
 	print "Error importing the Tweepy package..."
-	print "Have you installed it using 'sudo easy_install tweepy'?"
-	print "Or maybe you are not running the correct version of python."
 	exit()
 try:
 	import os
@@ -37,11 +36,7 @@ try:
 	import argparse
 except (ImportError) :
 	print "Error importing the ArgParse package..."
-	print "python2.7 is currently required..."
 	exit()
-
-
-
 
 # Parse command line arguments using argparse. Descriptions added here will be displayed using -h
 
@@ -82,7 +77,7 @@ parser.add_argument('-rtm','--retweetstome', action='store_true', default=False,
 parser.add_argument('-n','--newline', action='store_true', default=False,
                     dest='newline',
                     help='Display\'s tweets your latest timeline.')
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.02')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.03')
 parser.add_argument('-e','--example', action='store_true', default=False,
                     dest='example',
                     help='Display\'s an example GeekTool script path.')
@@ -188,9 +183,10 @@ def setupoauth():
 	config.set('Twitter Auth', 'CONSUMER_SECRET', CONSUMER_SECRET)
 	config.set('Twitter Auth', 'ACCESS_KEY', ACCESS_KEY)
 	config.set('Twitter Auth', 'ACCESS_SECRET', ACCESS_SECRET)
+	
+	config.write(open(AuthKeysDataFile, 'wb'))
+	
 
-	with open(AuthKeysDataFile, 'wb') as configfilewrite:
-		config.write(configfilewrite)
 	
 	# Print the results in the terminal so the user knows what has happened.
 	
@@ -278,21 +274,25 @@ def determine_max_username(padding,type,sorting):
 		#
 		# Because the Twitter username is sometimes in different places based on Twitter API type,
 		# size of Twitter username is checked based on the type of Twitter API used.
+		try:
+			if sorting == "timeline":
+				size = len(result.user.screen_name)
 		
-		if sorting == "timeline":
-			size = len(result.user.screen_name)
-		if sorting == "retweet":
-			size = len(result.user.screen_name + str(result.retweet_count))
-		if sorting == "search":
-			size = len(result.from_user)
-		if sorting == "direct" or sorting == "directsent":
-			size = len(result.sender_screen_name)
-			
-		# If the current Twitter username is longer than the last, set length to that value.
+			if sorting == "retweet":
+				size = len(result.user.screen_name + str(result.retweet_count))
+				
+			if sorting == "search":
+				size = len(result.from_user)
+			if sorting == "direct" or sorting == "directsent":
+				size = len(result.sender_screen_name)
+		except:
+				pass
+				
+			# If the current Twitter username is longer than the last, set length to that value.
 		
 		if size > length:
 			length = size
-	
+
 	# Once we have checked all the results padding is added.
 	
 	pad = length + padding
@@ -300,55 +300,37 @@ def determine_max_username(padding,type,sorting):
 	# Print the results, slightly different output based Twitter API type.
 	#
 	# I'm going to look a new/better way of printing line spacing if required. :/
-
 	
 	for result in type:
-		if sorting == "timeline":
-			unicoded = result.text.encode("utf-8")
-			if columnwidth < 200:
-				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad)
-				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
-			else:
-				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name+":",reset, width=pad) + unicoded
-			if results.newline == True:
-				print unicoded
-		if sorting == "retweet":
-			unicoded = result.text.encode("utf-8")
-			if columnwidth < 200:
-				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad)
-				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
-			else:
-				print "{0}{1:{width}}{2}".format(bold,result.user.screen_name + "(" + str(result.retweet_count) + "):",reset, width=pad) + unicoded
-			if results.newline == True:
-				print
-		if sorting == "search":
-			unicoded = result.text.encode("utf-8")
-			if columnwidth < 200:
-				print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad)
-				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
-			else:
-				print "{0}{1:{width}}{2}".format(bold,result.from_user+":",reset, width=pad) + unicoded
-			if results.newline == True:
-				print
-		if sorting == 'direct':
-			unicoded = result.text.encode("utf-8")
-			if columnwidth < 200:
-				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad)
-				print textwrap.fill(unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
-			else:
-				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad)  + unicoded
-			if results.newline == True:
-				print
-		if sorting == "directsent":
-			unicoded = result.text.encode("utf-8")
-			if columnwidth < 200:
-				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad)
-				print textwrap.fill("@" + result.recipient_screen_name + " " + unicoded,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
-			else:
-				print "{0}{1:{width}}{2}".format(bold,result.sender_screen_name+":",reset, width=pad) + "@" + result.recipient_screen_name + " "  + unicoded
-			if results.newline == True:
-				print
+		try: 
+			if sorting == "timeline":
+				usernameformat = result.user.screen_name+":"
+			
+			if sorting == "retweet":
+				usernameformat = result.user.screen_name + "(" + str(result.retweet_count) + "):"
+							
+			if sorting == "search":
+				usernameformat = result.from_user+":"
+			
+			if sorting == "direct" or sorting == "directsent":
+				usernameformat = result.sender_screen_name+":"
 
+			if sorting == "directsent":
+				tweetformat =  "@" + result.recipient_screen_name + " " + result.text
+			else:
+				tweetformat = result.text
+
+			if columnwidth < 200:
+				print '%s%0*s' % (bold,-pad,usernameformat) + reset
+				print textwrap.fill(tweetformat,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+			else:
+				print '%s%0*s' % (bold,-pad,usernameformat) + reset + tweetformat
+			
+			if results.newline == True:
+					print
+		except:
+			pass
+	
 # Determines which Twitter api to use. Then sends the output to the determine_max_username function
 # for printing output.
 
