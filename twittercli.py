@@ -302,7 +302,7 @@ def determine_max_username(padding,type,sorting):
 	# I'm going to look a new/better way of printing line spacing if required. :/
 	
 	for result in type:
-		try: 
+		try:
 			if sorting == "timeline":
 				usernameformat = result.user.screen_name+":"
 			
@@ -322,9 +322,9 @@ def determine_max_username(padding,type,sorting):
 
 			if columnwidth < 200:
 				print '%s%0*s' % (bold,-pad,usernameformat) + reset
-				print textwrap.fill(tweetformat,initial_indent='  ',subsequent_indent='  ', width=columnwidth)
+				print (textwrap.fill(tweetformat,initial_indent='  ',subsequent_indent='  ', width=columnwidth)).encode("UTF-8")
 			else:
-				print '%s%0*s' % (bold,-pad,usernameformat) + reset + tweetformat
+				print ('%s%0*s' % (bold,-pad,usernameformat) + reset + tweetformat).encode("UTF-8")
 			
 			if results.newline == True:
 					print
