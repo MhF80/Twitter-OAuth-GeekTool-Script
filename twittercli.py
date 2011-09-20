@@ -300,6 +300,9 @@ def determine_max_username(padding,type,sorting):
 	# Print the results, slightly different output based Twitter API type.
 	#
 	# I'm going to look a new/better way of printing line spacing if required. :/
+	spacer = ""
+	for counter in range(pad):
+		spacer = spacer + " "
 	
 	for result in type:
 		try:
@@ -320,6 +323,8 @@ def determine_max_username(padding,type,sorting):
 			else:
 				tweetformat = result.text
 
+			tweetformat = tweetformat.replace("\n", "\n"+spacer)
+			
 			if columnwidth < 200:
 				print '%s%0*s' % (bold,-pad,usernameformat) + reset
 				print (textwrap.fill(tweetformat,initial_indent='  ',subsequent_indent='  ', width=columnwidth)).encode("UTF-8")
