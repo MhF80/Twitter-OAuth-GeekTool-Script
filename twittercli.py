@@ -77,7 +77,7 @@ parser.add_argument('-rtm','--retweetstome', action='store_true', default=False,
 parser.add_argument('-n','--newline', action='store_true', default=False,
                     dest='newline',
                     help='Display\'s tweets your latest timeline.')
-parser.add_argument('-v','--version', action='version', version='%(prog)s 1.03')
+parser.add_argument('-v','--version', action='version', version='%(prog)s 1.04')
 parser.add_argument('-e','--example', action='store_true', default=False,
                     dest='example',
                     help='Display\'s an example GeekTool script path.')
