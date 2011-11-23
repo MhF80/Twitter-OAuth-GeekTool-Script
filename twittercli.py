@@ -325,6 +325,13 @@ def determine_max_username(padding,type,sorting):
 
 			tweetformat = tweetformat.replace("\n", "\n"+spacer)
 			
+			if sorting == "search":
+				tweetformat = tweetformat.replace('&lt;', '<')
+				tweetformat = tweetformat.replace('&gt;', '>')
+				tweetformat = tweetformat.replace('&quot;', '"')
+				tweetformat = tweetformat.replace('&#39;', "'")
+				tweetformat = tweetformat.replace('&amp;', '&')
+			
 			if columnwidth < 200:
 				print '%s%0*s' % (bold,-pad,usernameformat) + reset
 				print (textwrap.fill(tweetformat,initial_indent='  ',subsequent_indent='  ', width=columnwidth)).encode("UTF-8")
